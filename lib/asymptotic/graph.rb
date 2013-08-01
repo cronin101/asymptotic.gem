@@ -10,17 +10,19 @@ module Asymptotic
     def plot
       Gnuplot.open do |gnuplot|
         Gnuplot::Plot.new(gnuplot) do |plot|
-          plot.title "Asymptotic Analysis of #{@problem} (#{`ruby -v`.split(' (').first})"
+          plot.title "Average Runtime Analysis of #{@problem} (#{`ruby -v`.split(' (').first})"
           plot.xlabel "Input size"
-          plot.ylabel "Time taken in seconds"
+          plot.ylabel "Average time taken in seconds (ran #{@attempt} times)"
 
           @algorithm_hash.each do |name, function_hash|
-            puts "\nRunning benchmarks on: #{name}".green
-            seeds = function_hash[:input_seeds]
+            seeds = function_hash[:input_seeds].to_a.shuffle
             input_generation_function = function_hash[:input_function]
             function = function_hash[:function]
+            puts "\nGenerating inputs...".red
             inputs = seeds.pmap(8, &input_generation_function)
             sizes = inputs.pmap(8, &:size)
+
+            puts "\nRunning benchmarks on: #{name}".green
             runtimes = inputs.map do |input|
 
               GC.disable
