@@ -43,7 +43,7 @@ Asymptotic::Graph::plot("Data-Structure Element Retrieval Methods",
 )
 
 ```
-![](http://i.imgur.com/oZ4VpMx.png)
+![](http://i.imgur.com/6PN7jCy.png)
 
 ## Contributing
 
