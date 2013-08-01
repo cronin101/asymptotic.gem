@@ -2,6 +2,8 @@
 
 Create runtime-analysis graphs with minimal effort.
 
+![](http://i.stack.imgur.com/Pd0zT.png)
+
 ## Installation
 
 Add this line to your application's Gemfile:
