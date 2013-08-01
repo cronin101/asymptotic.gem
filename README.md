@@ -23,13 +23,13 @@ require 'asymptotic'
 
 Asymptotic::Graph::plot("Data-Structure Element Retrieval Methods",
 
-  check_if_element_in_array: {
+  "Checking if an element is in an array" => {
     function: ->(shuffled_array){ shuffled_array.include? 1 },
     input_seeds: (1..1000),
     input_function: ->(limit){ (1..limit*1000).to_a.shuffle }
   },
 
-  check_if_key_in_hash: {
+  "Checking if a key is in a hash" => {
     function: ->(hash){ hash.has_key? 'my key' },
     input_seeds: (1..1000),
     input_function: ->(limit){
@@ -43,7 +43,7 @@ Asymptotic::Graph::plot("Data-Structure Element Retrieval Methods",
 )
 
 ```
-![](http://i.imgur.com/6PN7jCy.png)
+![](http://i.imgur.com/sOYTOWh.png)
 
 ## Contributing
 
