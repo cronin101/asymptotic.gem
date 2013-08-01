@@ -1,7 +1,8 @@
 module Asymptotic
   class Graph
 
-    def initialize(problem, algorithm_hash)
+    def initialize(attempts = 5, problem, algorithm_hash)
+      @attempts = attempts
       @problem = problem
       @algorithm_hash = algorithm_hash
     end
@@ -11,7 +12,7 @@ module Asymptotic
         Gnuplot::Plot.new(gnuplot) do |plot|
           plot.title "Asymptotic Analysis of #{@problem} (#{`ruby -v`.split(' (').first})"
           plot.xlabel "Input size"
-          plot.ylabel "Time taken"
+          plot.ylabel "Time taken in seconds"
 
 
           @algorithm_hash.each do |name, function_hash|
@@ -21,13 +22,18 @@ module Asymptotic
             function = function_hash[:function]
             sizes = []
             runtimes = seeds.map do |seed|
-              input = input_generation_function.(seed)
-              sizes << input.size
+              size = 0
+              times_taken = ([0] * @attempts).map do
+                input = input_generation_function.(seed)
+                size = input.size
+                GC.disable
+                time_taken = Benchmark.realtime { function[input] }
+                GC.enable
+                time_taken
+              end
+              sizes << size
               print '.'.yellow
-              GC.disable
-              time_taken = Benchmark.realtime { function[input] }
-              GC.enable
-              time_taken
+              average_time_taken = times_taken.inject(:+) / @attempts.to_f
             end
 
             points = [sizes, runtimes]
