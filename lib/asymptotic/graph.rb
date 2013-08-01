@@ -12,24 +12,27 @@ module Asymptotic
         Gnuplot::Plot.new(gnuplot) do |plot|
           plot.title "Average Runtime Analysis of #{@problem} (#{`ruby -v`.split(' (').first})"
           plot.xlabel "Input size"
-          plot.ylabel "Average time taken in seconds (ran #{@attempt} times)"
+          plot.ylabel "Average time taken in seconds (ran #{@attempts} times)"
 
           @algorithm_hash.each do |name, function_hash|
-            seeds = function_hash[:input_seeds].to_a.shuffle
+            seeds = function_hash[:input_seeds]
             input_generation_function = function_hash[:input_function]
             function = function_hash[:function]
-            puts "\nGenerating inputs...".red
-            inputs = seeds.pmap(8, &input_generation_function)
-            sizes = inputs.pmap(8, &:size)
+            sizes = []
 
             puts "\nRunning benchmarks on: #{name}".green
-            runtimes = inputs.map do |input|
+            runtimes = seeds.map do |seed|
 
-              GC.disable
+              size = 0
               times_taken = ([0] * @attempts).map do
-                Benchmark.realtime { function[input] }
+                input = input_generation_function.(seed)
+                GC.disable
+                time_taken  = Benchmark.realtime { function[input] }
+                GC.enable
+                size = input.size
+                time_taken
               end
-              GC.enable
+              sizes << size
 
               print '.'.yellow
               average_time_taken = times_taken.inject(:+) / @attempts.to_f
