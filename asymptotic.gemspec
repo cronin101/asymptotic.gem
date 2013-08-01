@@ -22,5 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
 
   spec.add_dependency "colored"
+  spec.add_dependency "peach"
   spec.add_dependency "gnuplot"
 end

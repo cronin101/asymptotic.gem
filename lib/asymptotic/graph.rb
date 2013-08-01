@@ -14,24 +14,21 @@ module Asymptotic
           plot.xlabel "Input size"
           plot.ylabel "Time taken in seconds"
 
-
           @algorithm_hash.each do |name, function_hash|
             puts "\nRunning benchmarks on: #{name}".green
             seeds = function_hash[:input_seeds]
             input_generation_function = function_hash[:input_function]
             function = function_hash[:function]
-            sizes = []
-            runtimes = seeds.map do |seed|
-              size = 0
+            inputs = seeds.pmap(8, &input_generation_function)
+            sizes = inputs.pmap(8, &:size)
+            runtimes = inputs.map do |input|
+
+              GC.disable
               times_taken = ([0] * @attempts).map do
-                input = input_generation_function.(seed)
-                size = input.size
-                GC.disable
-                time_taken = Benchmark.realtime { function[input] }
-                GC.enable
-                time_taken
+                Benchmark.realtime { function[input] }
               end
-              sizes << size
+              GC.enable
+
               print '.'.yellow
               average_time_taken = times_taken.inject(:+) / @attempts.to_f
             end
@@ -45,7 +42,6 @@ module Asymptotic
           end
         end
       end
-
     end
 
     def self.plot(*args)
