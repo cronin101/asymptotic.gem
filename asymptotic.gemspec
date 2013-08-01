@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["cronin@include.cat"]
   spec.description   = %q{Toolkit for asymptotic analysis of functions}
   spec.summary       = %q{Toolkit for asymptotic analysis of functions}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/cronin101/asymptotic.gem"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

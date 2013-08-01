@@ -1,4 +1,4 @@
-# Asymptotic
+# asymptotic.gem
 
 Create runtime-analysis graphs with minimal effort.
 
