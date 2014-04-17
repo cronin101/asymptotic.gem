@@ -1,6 +1,5 @@
 module Asymptotic
   class Graph
-
     def initialize(attempts = 5, problem, algorithm_hash)
       @attempts = attempts
       @problem = problem
@@ -10,8 +9,9 @@ module Asymptotic
     def plot
       Gnuplot.open do |gnuplot|
         Gnuplot::Plot.new(gnuplot) do |plot|
+          plot.terminal 'pdf'
           plot.title "Average Runtime Analysis of #{@problem} (#{`ruby -v`.split(' (').first})"
-          plot.xlabel "Input size"
+          plot.xlabel 'Input size'
           plot.ylabel "Average time taken in seconds (ran #{@attempts} times)"
 
           @algorithm_hash.each do |name, function_hash|
@@ -25,7 +25,7 @@ module Asymptotic
 
               size = 0
               times_taken = ([0] * @attempts).map do
-                input = input_generation_function.(seed)
+                input = input_generation_function.call(seed)
                 GC.disable
                 time_taken  = Benchmark.realtime { function[input] }
                 GC.enable
@@ -40,19 +40,18 @@ module Asymptotic
 
             points = [sizes, runtimes]
             plot.data << Gnuplot::DataSet.new(points) do |set|
-              set.with = "linespoints"
+              set.with = 'linespoints'
               set.title = name
             end
 
           end
+          plot.output 'gnuplot.pdf'
         end
       end
     end
 
     def self.plot(*args)
-      self.new(*args).plot
+      new(*args).plot
     end
-
   end
 end
-
